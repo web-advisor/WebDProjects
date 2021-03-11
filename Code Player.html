@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- Setting Character Set Viewport Author Description Keywords as pesented in server search -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Amar Sinha">
+    <meta name="description" content="A cool interactive Code Player !!">
+    <meta name="keywords" content="Code Player,jQuery,jQuery UI,AJAX">
+    <meta http-equiv="refresh" content="300">
+
+    <title>Code Player</title>
+
+    <!-- Including jQuery and jQuery UI -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="jquery-ui/jquery-ui.js"></script>
+
+    <!-- If javaScript fails -->
+    <noscript>Your Browser doesn't support javaScript or it has blocked the javaScript.</noscript>
+
+    <!-- Including jQuery UI stylesheets used for styling of jQuery UI functions imported like Sortable,Accordion -->
+    <link href="jquery-ui/jquery-ui.css" rel="stylesheet">
+
+    <!-- Internal CSS -->
+    <style type="text/css">
+        /* Removing default Padding and Margin given by browser */
+        body {
+            font: sans-serif;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #Top-bar {
+            width: 100%;
+            background-color: #ededed;
+            padding: 5px;
+            height: 30px;
+        }
+
+        #logo {
+            float: left;
+            font-size: 150%;
+            padding: 2px;
+            font-weight: 900;
+        }
+
+        /* Setting the horizontal bar at the center of Top bar */
+        #butt {
+            width: 230px;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+
+        /* Default styling for horizontal bar */
+        .togbutt {
+            float: left;
+            padding: 5px;
+            border: 1px solid grey;
+            border-right: none;
+        }
+
+        /* Select all the first child of div identified as a child of #butt div */
+        #butt div:first-child {
+            border-bottom-left-radius: 5px;
+            /* to set the left borders rounded of the horizontal navigation bar */
+            border-top-left-radius: 5px;
+        }
+
+        #butt div:last-child {
+            border-right: 1px solid grey;
+            /* to set the right borders rounded of the horizontal navogation bar */
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        /* Signifies the selected sections */
+        .active {
+            background-color: #ddffff;
+        }
+
+
+        /* To change the color of the div over which mouse is hovering */
+        .highlight {
+            background-color: grey;
+        }
+
+        /* To hide the CSS and javaScript panels by default and toggle btw hide and show whenever a panel is selected from the horizontal navigation bar */
+        .hidden {
+            display: none;
+        }
+
+        /* textareas will be HTML ,CSS ,javaScript */
+        textarea {
+            resize: none;
+            width: 50%;
+            background-color: #a9a9a9;
+        }
+
+        /* Output window will be a new page  */
+        iframe {
+            border: none;
+        }
+
+        /* Common to all the panels  */
+        .panel {
+            float: left;
+            border-top: none;
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Topbar : CodePlayer  and horizontal selection bar -->
+    <div id="Top-bar">
+        <div id="logo">Code Player</div>
+        <!-- The whole horizontal selection bar -->
+        <div id="butt">
+            <div class="togbutt active" id="HTML">HTML</div>
+            <div class="togbutt" id="CSS">CSS</div>
+            <div class="togbutt" id="jS">JavaScript</div>
+            <div class="togbutt active" id="Output">Output</div>
+        </div>
+    </div>
+
+    <!-- The Main body container -->
+    <div id="main">
+        <textarea id="HTMLtxt" class="panel"><p id="para">Enter your HTML here.</p></textarea>
+        <textarea id="CSStxt"
+            class="panel hidden">/* Enter Your CSS Here */     #para{color:red;font-size:200%;}</textarea>
+        <textarea id="jStxt"
+            class="panel hidden">/*Enter Your JavaScript Here */ document.getElementById("para").innerHTML="Output Window ";</textarea>
+        <iframe id="Outputtxt" class="panel">OUTPUT here</iframe>
+        <!-- All the id's of panels have "txt" in addition to their respective button id's so that linking is done for each one with a single command rather one for each command -->
+    </div>
+
+    <!-- Internal javaScript -->
+    <script type="text/javascript">
+
+        // hover(handlerIn,handlerOut)   => handlerIn()performmed when mouse enters ,handlerOut()performed when mouse moves out
+        // Hovering effect of horizontal navigation bar
+        $(".togbutt").hover(function () {
+            $(this).addClass("highlight");
+        }, function () {
+            $(this).removeClass("highlight");
+        });
+
+        // Function definition for actions while clicking an option of horizontal navigation bar
+        $(".togbutt").click(function () {
+            $(this).toggleClass("active");        // Toggle the color of active bar : if not selected yet then  select and vice-versa 
+            $(this).removeClass("highlight");     // Removing hovering effect and using clicking effect for mousedown
+            let a = $(this).attr("id") + "txt";   // Extracting panel's id from their respective button id's
+            $("#" + a).toggle();                  // Toggle between show and hide of panels as their respective button are clicked
+            $(".panel").width(($(window).width() / $(".active").length) - 8);       // $(".active").length => gives the number of active panels at the moment and these panel's get eually divided according to the number of it.
+        });
+
+        // Function definition for output panel .
+        function OP() {
+            $("iframe").contents().find("html").html("<html><head><style type='text/css'>" + $("#CSStxt").val() + "</style></head><body>" + $("#HTMLtxt").val() + "</body></html>");
+            /* Frame's HTML structure defined . 
+            <html>
+                <head>
+                    <style type='text/css'>
+                        $("#CSStxt").val()
+                    </style>
+                </head>
+                <body>
+                    $("#HTMLtxt").val()
+                    <script> not included because then the user can also edit our document's javascripting ..
+                </body>
+            </html>
+            */
+            document.getElementById("Outputtxt").contentWindow.eval($("#jStxt").val());
+            // Extracting javaScript from #jStxt and appplying it to Outputtxt panel 
+        }
+
+        // Setting default Height and width for HTML and Output window wwhich will be shown on page load .
+        $(".panel").width(($(window).width() / 2) - 8);
+        $(".panel").height($(window).height() - $("#Top-bar").height() - 20);
+        OP();
+
+        // Changing Output with every key pressed ,change in txt and pasting operation on the three panels 
+        $("textarea").on("change keyup paste", function () {
+            OP();
+        });
+
+    </script>
+
+</body>
+
+</html>

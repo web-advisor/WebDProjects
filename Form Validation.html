@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Amar Sinha">
+        <meta name="description" content="A Mini Project using jQuery for Form Validation">
+        <meta name="keywords" content="Projrct,Form Validation,jQuery,Ajax,jSRegExp">
+        <meta http-equiv="refresh" content="300">
+        <title>Form Validation</title>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="jquery-ui/jquery-ui.js"></script>
+        <noscript>Your Browser doesn't support javaScript or it has blocked the javaScript.</noscript>
+        <link href="jquery-ui/jquery-ui.css" rel="stylesheet">
+        <style type="text/css">
+            body{
+                font-family:Helvetica, sans-serif;
+                font-size: 200%;
+                background-color: #eeffff;
+            }
+            #outer{
+                background-color: #ccffff;
+                width:725px;
+            }
+            div{
+                border-style: solid;
+                border-color: rebeccapurple;
+                border-width: medium;
+                padding: 12px;
+                background-color: #ddffff;
+                width:700px;
+                margin:auto;
+                text-align: center;
+            }
+            label{
+                width: 270px;
+                float:left;
+                
+            }
+            input{
+                font-size: 80%;
+                padding: 5px;
+                border-radius: 5px;
+                border:2px solid #fedcba;
+                margin:3px;
+            }
+            #signUp{
+                border:none;
+            }
+            #submit{
+                font-weight: bolder;
+                background-color: #aaffff;
+                cursor:hand;
+            }
+            #errorArea{
+                border:4px solid red;
+                background-color: salmon;
+                height:auto;
+                font-size:40%;
+                font-weight: 900;
+
+            }
+
+            
+        </style>
+    </head>
+    <body>
+        <div id="outer">
+            <p id="welcome"></p>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" size="25px" name="email" placeholder="alphabetagamma@greek.com" required>
+            </div>
+            <div>
+                <label for="phone">Contact No.</label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9 +]{3}" size="1px" value="+91" required>
+                <input type="tel" id="phoneNum" pattern="[0-9]{10}" size="17px" placeholder="9876543210" required>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" size="25px" name="password" title="Please try a combination of Small letters,Capital letters,Digits and Special characters for a strong password" required>
+            </div>
+            <div>
+                <label for="Cpassword">Confirm Password</label>
+                <input type="password" id="Cpassword" size="25px" name="Cpassword" title="Make sure you enter the same Password as above" required>
+            </div>
+            <p id="errorArea"></p>
+            <div id="signUp">
+                <input type="submit" id="submit" size="25px" name="submit" value="Sign Up">
+            </div>
+        </div>
+       
+       
+       
+       <script type="text/javascript">
+            
+            function validateEmail(email) {
+                var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+            }
+            $("#submit").click(function(){
+                let error="";
+                let empty="";
+                
+                if($("#email").val()==""){
+                    empty += "<br>Email";
+                }
+                if($("#phoneNum").val()==""){
+                    empty += "<br>Contact Number";
+                }
+                if($("#password").val()==""){
+                    empty += "<br>Password";
+                }
+                if($("#Cpassword").val()==""){
+                    empty += "<br>Confirm Password";
+                }
+                if(empty!=""){
+                    error += "The Following Field(s) is/are Empty : "+ empty;
+                }
+                if(validateEmail($("#email").val())==false){
+                    error+="<p> Your email address is not valid !</p>";
+                } 
+                if($.isNumeric($("#phoneNum").val())==false){
+                    error+="<p> Your Phone Number should contain Numbers only !</p>";
+                }
+                if($("#password").val()!=$("#Cpassword").val()){
+                    error+="<p> Your Passwords does not match !</p>";
+                }   
+                if(error!=""){
+                   $("#errorArea").html(error);
+                }else{
+                    $("#welcome").html("Welcome to the family !");
+                    $("#welcome").css("font-size","120%");
+                    $("#welcome").css("border","4px solid #4ccc1a");
+                    $("#welcome").css("background-color","#9ecf8b");
+                    $("#welcome").css("font-weight","900");
+                    $("#errorArea").hide();
+                }
+            });
+
+        </script>
+
+    </body>
+</html>
